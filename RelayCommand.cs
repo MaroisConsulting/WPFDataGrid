@@ -77,6 +77,7 @@ namespace WPFDataGrid
         }
         #endregion
     }
+
     public class RelayCommand<T> : ICommand
     {
         #region Fields
@@ -116,6 +117,11 @@ namespace WPFDataGrid
         #endregion
 
         #region ICommand Members
+        private bool CanExecuteCore(T parameter)
+        {
+            return _canExecute is null || _canExecute(parameter);
+        }
+
         /// <summary>
         /// Defines the method that determines whether the command can execute in its current state.
         /// </summary>
@@ -124,16 +130,7 @@ namespace WPFDataGrid
         /// <returns>true if this command can be executed; otherwise, false.</returns>
         public bool CanExecute(object parameter)
         {
-            return _canExecute == null ? true : _canExecute((T)parameter);
-        }
-
-        /// <summary>
-        /// Occurs when changes occur that affect whether the command should execute.
-        /// </summary>
-        public event EventHandler CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            return parameter is T param && CanExecuteCore(param);
         }
 
         /// <summary>
@@ -143,10 +140,19 @@ namespace WPFDataGrid
         /// to be passed, this object can be set to a null reference</param>
         public void Execute(object parameter)
         {
-            if (CanExecute(parameter))
+            if (parameter is T param && CanExecuteCore(param))
             {
-                _execute((T)parameter);
+                _execute(param);
             }
+        }
+
+        /// <summary>
+        /// Occurs when changes occur that affect whether the command should execute.
+        /// </summary>
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
         }
         #endregion
     }

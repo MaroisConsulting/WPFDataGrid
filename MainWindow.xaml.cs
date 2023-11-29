@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -72,8 +73,19 @@ namespace WPFDataGrid
             get
             {
                 if (_DeleteColumnCommand == null)
-                    _DeleteColumnCommand = new RelayCommand<ColumnInfoEntity>(p => DeleteColumnExecuted(p), p => DeleteColumnCanExecute());
+                    _DeleteColumnCommand = new RelayCommand<ColumnInfoEntity>(p => DeleteColumnExecuted(p), p => DeleteColumnCanExecute(p));
                 return _DeleteColumnCommand;
+            }
+        }
+
+        private ICommand _NewItemAddedCommand;
+        public ICommand NewItemAddedCommand
+        {
+            get
+            {
+                if (_NewItemAddedCommand == null)
+                    _NewItemAddedCommand = new RelayCommand<ColumnInfoEntity>(p => NewItemAddedExecuted(p), p => NewItemAddedCanExecute());
+                return _NewItemAddedCommand;
             }
         }
 
@@ -96,9 +108,9 @@ namespace WPFDataGrid
         }
 
 
-        private bool DeleteColumnCanExecute()
+        private bool DeleteColumnCanExecute(ColumnInfoEntity column)
         {
-            return SelectedColumnInfo != null;
+            return column != null;
         }
 
         private void DeleteColumnExecuted(ColumnInfoEntity column)
@@ -119,12 +131,21 @@ namespace WPFDataGrid
             }
         }
 
+        private bool NewItemAddedCanExecute()
+        {
+            return true;
+        }
+
+        private void NewItemAddedExecuted(ColumnInfoEntity p)
+        {
+        }
+
         private void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void ColumnInfos_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void ColumnInfos_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             ColumnCount = ColumnInfos.Count;
         }

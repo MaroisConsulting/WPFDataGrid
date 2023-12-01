@@ -46,6 +46,7 @@
 
         <DataGrid Grid.Row="2"
                   Grid.Column="0"
+                  x:Name="grid"
                   ItemsSource="{Binding ColumnInfos}"
                   HorizontalGridLinesBrush="LightGray"
                   VerticalGridLinesBrush="LightGray"
@@ -61,25 +62,28 @@
                   HorizontalScrollBarVisibility="Auto"
                   VerticalScrollBarVisibility="Auto"
                   VerticalAlignment="Stretch"
-                  Margin="5,0,5,5">
+                  Margin="5,0,5,5"
+                  AddingNewItem="DataGrid_AddingNewItem">
 
             <DataGrid.Resources>
                 <local:BindingProxy x:Key="proxy" 
                                     Data="{Binding IsColumnWidthVisibile}"/>
             </DataGrid.Resources>
 
-            <i:EventTrigger EventName="AddingNewItem">
-                <i:InvokeCommandAction Command="{Binding NewItemAddedCommand}"
-                                       CommandParameter="{Binding}"/>
-            </i:EventTrigger>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="AddingNewItem">
+                    <i:InvokeCommandAction Command="{Binding DataContext.NewItemAddedCommand, 
+                      RelativeSource={
+                          RelativeSource FindAncestor, AncestorType=Window}}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
 
             <DataGrid.Columns>
 
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Command="{Binding DeleteColumnCommand, RelativeSource={RelativeSource FindAncestor, 
-                                                                            AncestorLevel=1, AncestorType={x:Type Window}}}"
+                            <Button Command="{Binding DeleteColumnCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
                                     CommandParameter="{Binding}"
                                     Margin="2"
                                     Height="18"

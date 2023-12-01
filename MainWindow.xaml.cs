@@ -149,5 +149,10 @@ namespace WPFDataGrid
         {
             ColumnCount = ColumnInfos.Count;
         }
+
+        private void DataGrid_AddingNewItem(object sender, System.Windows.Controls.AddingNewItemEventArgs e)
+        {
+
+        }
     }
 }

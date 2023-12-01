@@ -89,6 +89,17 @@ namespace WPFDataGrid
             }
         }
 
+        private ICommand _WindowLoadedCommand;
+        public ICommand WindowLoadedCommand
+        {
+            get
+            {
+                if (_WindowLoadedCommand == null)
+                    _WindowLoadedCommand = new RelayCommand(p => WindowLoadedExecuted(), p => WindowLoadedCanExecute());
+                return _WindowLoadedCommand;
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -144,6 +155,16 @@ namespace WPFDataGrid
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        private bool WindowLoadedCanExecute()
+        {
+            return true;
+        }
+
+        private void WindowLoadedExecuted()
+        {
+        }
+
 
         private void ColumnInfos_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

@@ -11,6 +11,12 @@
         Height="450" 
         Width="800">
 
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="WindowLoadedCommand">
+            <i:InvokeCommandAction Command="{Binding DataContext.WindowLoadedCommand, ElementName=window}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Window.Resources>
         <local:BoolToVisibilityConverter x:Key="boolToVisibilityConverter"/>
     </Window.Resources>
